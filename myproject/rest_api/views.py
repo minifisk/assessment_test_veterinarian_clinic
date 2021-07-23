@@ -47,7 +47,7 @@ class AppointmentViewset(viewsets.ModelViewSet):
 
 class AppointmentView(APIView):
     """
-    API view for appointments
+    API view for a physicians appointments for a specific date, booked apointments for current day returned as list.
     """
 
     permission_classes = []
@@ -72,17 +72,28 @@ class AppointmentView(APIView):
 
         physician_serializer = PhysicianSerializer(data=sanitized_physician_context)
 
-        """ SHOULD HERE VALIDATE PHYSICIAN, WAS NOT ABLE TO DO IT DUE TO
-        THAT SERIALIZER HAD TO RECEIVE ALL FIELDS  """
+        """ SHOULD HERE VALIDATE PHYSICIAN SERIALIZER, WAS NOT ABLE TO DO IT DUE TO
+        THAT SERIALIZER HAD TO RECEIVE ALL FIELDS. I tried with adding kwargs in serializers
+        but only managed to make one field optional, didn't see how to use the
+        argument for multiple fields.  """
 
-        ### PERFORM LOGIC
+        try:
+            physician = Physician.objects.filter(first_name=sanitized_physician_first_name).filter(
+                last_name=sanitized_physician_last_name
+            )
 
-        physician = Physician.objects.filter(first_name=sanitized_physician_first_name).filter(
-            last_name=sanitized_physician_last_name
-        )
+            appointments_this_date = Appointment.objects.filter(physician=physician[0]).filter(
+                date=sanitized_date
+            )
 
-        appointments_this_date = Appointment.objects.filter(physician=physician[0])
+        except:
+            raise serializers.ValidationError(
+                "Could not find inputed physician or date was input incorrectly, supply with www.hostname/firstname/lastname/date - example: 'http://127.0.0.1:8000/bookings/alexander/lindgrenn/2021-07-23'"
+            )
 
-        print(appointments_this_date[0].time)
+        appointment_list = []
 
-        return Response("Hello")
+        for appointment in appointments_this_date:
+            appointment_list.append(appointment.time)
+
+        return Response(appointment_list)
