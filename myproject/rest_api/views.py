@@ -2,66 +2,87 @@
 """ Views """
 
 # Django core imports
-from django.contrib.auth.models import Group
-from django.contrib.auth import get_user_model
-
 
 # Third party imports
-from rest_framework import viewsets
-from rest_framework import permissions
+from rest_framework import permissions, serializers, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
+import bleach
 
 
 # App imports
-from .serializers import UserSerializer, GroupSerializer, HeroSerializer
-from .models import Hero
+from .serializers import (
+    AppointmentSerializer,
+    PhysicianSerializer,
+    ClinicSerializer,
+    PatientSerializer,
+    PetSerializer,
+)
+from .models import Appointment, Physician, Clinic, Patient, Pet
 
-User = get_user_model()
+
+def strip_xss(text):
+    """Remove all markup from text."""
+
+    allowed_tags = []
+    allowed_attributes = []
+    allowed_styles = []
+
+    text = bleach.clean(
+        text, allowed_tags, allowed_attributes, allowed_styles, strip=True, strip_comments=True
+    ).strip()
+
+    return text
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class AppointmentViewset(viewsets.ModelViewSet):
     """
-    API viewset endpoint that allows users to be viewed or edited.
+    API viewset endpoint for viewing and editing appointments
     """
 
-    queryset = User.objects.all().order_by("-date_joined")
-    serializer_class = UserSerializer
+    queryset = Appointment.objects.all()
+    serializer_class = AppointmentSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
-class GroupViewSet(viewsets.ModelViewSet):
+class AppointmentView(APIView):
     """
-    API viewset endpoint that allows groups to be viewed or edited.
-    """
-
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class HeroViewSet(viewsets.ModelViewSet):
-    """
-    API viewset endpoint for viewing and editing heroes
-    """
-
-    queryset = Hero.objects.all().order_by("name")
-    serializer_class = HeroSerializer
-
-
-class HeroApiView(APIView):
-    """
-    API view for heroes
+    API view for appointments
     """
 
     permission_classes = []
 
-    def get(self, request):
+    def get(self, request, physician_first_name, physician_last_name, date):
         """
-        Return a list of all Heroes
+        Return available time-slots for requested physician and date
         """
 
+        unsafe_physician_first_name = physician_first_name
+        unsafe_physician_last_name = physician_last_name
+        unsafe_date = date
+
+        sanitized_physician_first_name = strip_xss(unsafe_physician_first_name)
+        sanitized_physician_last_name = strip_xss(unsafe_physician_last_name)
+        sanitized_date = strip_xss(unsafe_date)
+
+        sanitized_physician_context = {
+            "first_name": sanitized_physician_first_name,
+            "last_name": sanitized_physician_last_name,
+        }
+
+        physician_serializer = PhysicianSerializer(data=sanitized_physician_context)
+
+        """ SHOULD HERE VALIDATE PHYSICIAN, WAS NOT ABLE TO DO IT DUE TO
+        THAT SERIALIZER HAD TO RECEIVE ALL FIELDS  """
+
         ### PERFORM LOGIC
-        heroes_queryset = Hero.objects.all().order_by("name")
-        serialized_heroes = HeroSerializer(heroes_queryset, many=True)
-        return Response(serialized_heroes.data)
+
+        physician = Physician.objects.filter(first_name=sanitized_physician_first_name).filter(
+            last_name=sanitized_physician_last_name
+        )
+
+        appointments_this_date = Appointment.objects.filter(physician=physician[0])
+
+        print(appointments_this_date[0].time)
+
+        return Response("Hello")

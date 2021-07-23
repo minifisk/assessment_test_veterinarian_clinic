@@ -1,42 +1,59 @@
 """ Serializers """
 
 # Django Core imports
-from django.contrib.auth.models import Group
-from django.contrib.auth import get_user_model
 
 # Third party imports
 from rest_framework import serializers
 
 # App imports
-from .models import Hero
+from .models import Appointment, Physician, Clinic, Patient, Pet
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class AppointmentSerializer(serializers.HyperlinkedModelSerializer):
     """
-    Serializer for users
-    """
-
-    class Meta:
-        User = get_user_model()
-        model = User
-        fields = ["url", "username", "email", "groups"]
-
-
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
-    """
-    Serializer for groups
+    Serializer for appointments
     """
 
     class Meta:
-        model = Group
-        fields = ["url", "name"]
+        model = Appointment
+        fields = ["physician", "date", "timeslot", "patient", "notes"]
 
 
-class HeroSerializer(serializers.HyperlinkedModelSerializer):
+class PhysicianSerializer(serializers.HyperlinkedModelSerializer):
     """
-    Serializer for heroes
+    Serializer for physicians
     """
 
     class Meta:
-        model = Hero
-        fields = ["name", "alias"]
+        model = Physician
+        fields = "__all__"
+
+
+class ClinicSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializer for clinics
+    """
+
+    class Meta:
+        model = Clinic
+        fields = ["name", "website", "city", "phone_number"]
+
+
+class PatientSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializer for patients
+    """
+
+    class Meta:
+        model = Patient
+        fields = ["first_name", "last_name", "email", "phone_number"]
+
+
+class PetSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializer for pets
+    """
+
+    class Meta:
+        model = Pet
+        fields = ["name", "animal_type", "email", "phone_number"]
