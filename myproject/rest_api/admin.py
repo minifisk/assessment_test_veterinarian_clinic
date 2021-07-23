@@ -1,3 +1,5 @@
+""" Admin """
+
 from django.contrib import admin
 from .models import Appointment, Physician, Clinic, Patient, Pet
 

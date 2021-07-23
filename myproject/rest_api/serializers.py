@@ -16,7 +16,7 @@ class AppointmentSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Appointment
-        fields = ["physician", "date", "timeslot", "patient", "notes"]
+        fields = "__all__"
 
 
 class PhysicianSerializer(serializers.HyperlinkedModelSerializer):
@@ -36,7 +36,7 @@ class ClinicSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Clinic
-        fields = ["name", "website", "city", "phone_number"]
+        fields = "__all__"
 
 
 class PatientSerializer(serializers.HyperlinkedModelSerializer):
@@ -46,7 +46,7 @@ class PatientSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Patient
-        fields = ["first_name", "last_name", "email", "phone_number"]
+        fields = "__all__"
 
 
 class PetSerializer(serializers.HyperlinkedModelSerializer):
@@ -56,4 +56,4 @@ class PetSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Pet
-        fields = ["name", "animal_type", "email", "phone_number"]
+        fields = "__all__"

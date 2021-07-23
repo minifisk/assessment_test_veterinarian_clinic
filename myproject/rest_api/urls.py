@@ -19,7 +19,7 @@ urlpatterns = [
     path("", include(router.urls)),
     path(
         "bookings/<str:physician_first_name>/<str:physician_last_name>/<str:date>",
-        views.AppointmentView.as_view(),
-        name="Appointment View",
+        views.AppointmentDateView.as_view(),
+        name="Appointment Date View",
     ),
 ]

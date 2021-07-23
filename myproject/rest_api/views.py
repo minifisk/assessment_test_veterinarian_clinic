@@ -4,7 +4,7 @@
 # Django core imports
 
 # Third party imports
-from rest_framework import permissions, serializers, viewsets
+from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import bleach
@@ -12,17 +12,13 @@ import bleach
 
 # App imports
 from .serializers import (
-    AppointmentSerializer,
     PhysicianSerializer,
-    ClinicSerializer,
-    PatientSerializer,
-    PetSerializer,
 )
-from .models import Appointment, Physician, Clinic, Patient, Pet
+from .models import Appointment, Physician
 
 
 def strip_xss(text):
-    """Remove all markup from text."""
+    """Helper function to remove all markup from user input fields."""
 
     allowed_tags = []
     allowed_attributes = []
@@ -35,26 +31,18 @@ def strip_xss(text):
     return text
 
 
-class AppointmentViewset(viewsets.ModelViewSet):
+class AppointmentDateView(APIView):
     """
-    API viewset endpoint for viewing and editing appointments
-    """
-
-    queryset = Appointment.objects.all()
-    serializer_class = AppointmentSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class AppointmentView(APIView):
-    """
-    API view for a physicians appointments for a specific date, booked apointments for current day returned as list.
+    API view to see what timeslots a specific physician has appointments
+    on a specific date.
     """
 
     permission_classes = []
 
     def get(self, request, physician_first_name, physician_last_name, date):
         """
-        Return available time-slots for requested physician and date
+        Return time-slots of appointments on a certain date for
+        the requested physician
         """
 
         unsafe_physician_first_name = physician_first_name
@@ -75,7 +63,7 @@ class AppointmentView(APIView):
         """ SHOULD HERE VALIDATE PHYSICIAN SERIALIZER, WAS NOT ABLE TO DO IT DUE TO
         THAT SERIALIZER HAD TO RECEIVE ALL FIELDS. I tried with adding kwargs in serializers
         but only managed to make one field optional, didn't see how to use the
-        argument for multiple fields.  """
+        argument for multiple fields, thus using try/except below for "validation".  """
 
         try:
             physician = Physician.objects.filter(first_name=sanitized_physician_first_name).filter(
