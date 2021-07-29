@@ -20,6 +20,12 @@ urlpatterns = [
     path(
         "bookings/<str:physician_first_name>/<str:physician_last_name>/<str:date>",
         views.AppointmentDateView.as_view(),
-        name="Appointment Date View",
+        name="See all bookings for a physician at a specific date",
     ),
+    path(
+        "bookings/<str:physician_first_name>/<str:physician_last_name>/",
+        views.PhysicianBookings.as_view(),
+        name="See all bookings for a physician/Create new booking",
+    ),
+    path("bookings/", views.Booking, name="Booking form view")
 ]

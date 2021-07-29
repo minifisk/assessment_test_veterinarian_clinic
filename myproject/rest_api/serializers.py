@@ -27,6 +27,13 @@ class PhysicianSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Physician
         fields = "__all__"
+        extra_kwargs = {
+            "first_name": {"required": True},
+            "last_name": {"required": True},
+            "email": {"required": False},
+            "speciality": {"required": False},
+            "clinic": {"required": False},
+        }
 
 
 class ClinicSerializer(serializers.HyperlinkedModelSerializer):
