@@ -39,5 +39,4 @@ class AppointmentTests(TestCase):
     def test_create_new_appointment(self):
         response = self.client.post("/bookings/", {"phyisician": "1", "patient": "1", "timeslot": "0", "date": "2021-07-30"})
         self.assertEqual(response.status_code, 200)
-        print(response)
 
