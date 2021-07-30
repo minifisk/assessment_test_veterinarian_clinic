@@ -1,4 +1,4 @@
-# Booking system for veterenarian clinic
+# Booking system for veterinarian clinic
 This is an assessment test I did in July 2021 for a position as a back-end engineer, I originally had 5 hours to create the project and have complemented the program with around 3-4 more hours of work.
 The program provide three endpoints aimed to be used by the front-end engineers to:
 1) See which timeslots on a specific date that a certain Physician have booked with clients
