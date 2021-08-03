@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterinarian Clinic</title>
+
+    <h1>Veterinarian booking system</h1>
+    <p>Welcome to the veterinarian Booking system, please find examples of what this API can do below</p>
+
+    <h2>See all bookings for a physician</h2>
+    {% for physician in physicians %}
+    <a href="/bookings/{{ physician.first_name }}/{{ physician.last_name}}">{{ scheme }}/{{ hostname }}/{{ physician.first_name }}/{{ physician.last_name}}</a><br>
+    {% endfor %}
+
+    <h2>See all bookings for a specific physician for a specific date </h2>
+    {% for physician in physicians %}
+    <a href="/bookings/{{ physician.first_name }}/{{ physician.last_name}}/2021-08-03">{{ scheme }}/{{ hostname }}/{{ physician.first_name }}/{{ physician.last_name}}/2021-08-03</a><br>
+    {% endfor %}
+
+    <h2>Create a new a booking</h2>
+    <a href="/bookings">{{ scheme }}/{{ hostname }}/bookings</a>
+
+    <h2>Access the admin panel (credentials given upon request)</h2>
+    <a href="/admin">{{ scheme }}/{{ hostname }}/admin</a>
+
+</head>
+<body>
+    
+</body>
+</html>

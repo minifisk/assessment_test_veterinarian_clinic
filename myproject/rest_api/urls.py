@@ -10,13 +10,10 @@ from rest_framework import routers
 from rest_api import views
 
 
-# Register users, groups and heroes-enpoints with the router
-router = routers.DefaultRouter()
-
 
 # Wire up our API using automatic URL routing.
 urlpatterns = [
-    path("", include(router.urls)),
+    path("", views.Index, name="index"),
     path(
         "bookings/<str:physician_first_name>/<str:physician_last_name>/<str:date>",
         views.AppointmentDateView.as_view(),

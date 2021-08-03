@@ -48,7 +48,7 @@ class AppointmentDateView(APIView):
             # Return exception with indstructions
             except:
                 raise serializers.ValidationError(
-                    "Could not find inputed physician or date was input incorrectly, supply with www.hostname/firstname/lastname/date - example: 'http://127.0.0.1:8000/bookings/alexander/lindgren/2021-07-23'"
+                    "Could not find inputed physician or date was input incorrectly, supply with www.hostname/bookings/firstname/lastname/date - example: 'http://127.0.0.1:8000/bookings/alexander/lindgren/2021-07-23'"
                 )
 
         else:
@@ -97,7 +97,7 @@ class PhysicianBookings(APIView):
             # Return exception with instructions
             except:
                 raise serializers.ValidationError(
-                    "Could not find inputed physician, supply with www.hostname/firstname/lastname - example: 'http://127.0.0.1:8000/bookings/alexander/lindgren/'"
+                    "Could not find inputed physician, supply with www.hostname/bookings/firstname/lastname - example: 'http://127.0.0.1:8000/bookings/alexander/lindgren/'"
                 )
 
         else:
@@ -143,3 +143,15 @@ def Booking(request):
         form = BookingForm()
 
     return render(request, 'booking.html', {'form': form})
+
+
+def Index(request):
+
+    physicians = Physician.objects.all()
+
+    hostname = request.get_host()
+
+    scheme = request.scheme
+
+    return render(request, 'index.html', {'physicians': physicians, 'hostname': hostname, 'scheme': scheme})
+
