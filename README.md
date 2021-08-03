@@ -5,6 +5,10 @@ The program provide three endpoints aimed to be used by the front-end engineers 
 2) See all past and future timeslots booked, grouped by date, for a certain Physician
 3) Create new appointments
 
+## Deployment
+This API endpoint have been deployed with Heroku and is persisted on a postgres database within the Heroku instance. You can find the enpoint over here to try it out:
+https://veterinarian-assesment.herokuapp.com/
+
 ## Installment instructions
 1) Clone project to your local machine
 2) Install pipenv dependencies with "pipenv install" (install pipenv with pip3 install pipenv if you don't have it installed globally)
